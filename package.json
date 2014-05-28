@@ -1,0 +1,18 @@
+{
+    "name": "Venmo Food Ordering",
+    "version": "0.0.0",
+    "description": "Needs a better name",
+    "main": "app.js",
+    "repository": {
+        "type": "git",
+        "url": "git://github.com/sagnew/VenmoFoodOrdering.git"
+    },
+    "dependencies": {
+        "express": "*",
+        "ejs": "*",
+        "ordrin-api": "*"
+    },
+    "author": "Sam Agnew",
+    "license": "MIT",
+    "readmeFilename": "README.md"
+}
