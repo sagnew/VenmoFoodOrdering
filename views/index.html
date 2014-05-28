@@ -1,0 +1,26 @@
+<% include header.html %>
+<div class="row">
+    <div class="large-12 small-12 columns>
+        <div class="row">
+            <h1>Enter some info dawg</h1>
+        </div>
+        <form action="/restaurants" method="GET">
+            <div class="row">
+                <input type="text" placeholder="Address" name="addr"></input>
+            </div>
+
+            <div class="row">
+                <input type="text" placeholder="City" name="city"></input>
+            </div>
+
+            <div class="row">
+                <input type="text" placeholder="Zip code" name="zip"></input>
+            </div>
+
+            <div class="row">
+                <button type="submit">Submit</button>
+            </div>
+        </form>
+    </div>
+</div>
+<% include footer.html %>
