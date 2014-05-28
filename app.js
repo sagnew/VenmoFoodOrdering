@@ -27,7 +27,7 @@ app.get('/restaurants', function (req, res) {
     ordrin_api.delivery_list(options, function (error, data) {
         if (error) { console.log(error); return; }
         res.render('buildTray.html', {
-            'restaurants': data
+            'restaurants': data,
             'addr': req.query.addr,
             'city': req.query.city,
             'zip': req.query.zip
@@ -52,8 +52,8 @@ app.get('/fee', function (req, res) {
     var options = {
         'rid': req.query.rid,
         'datetime': 'ASAP',
-        'subtotal': 0,
-        'tip': 0,
+        'subtotal': '0.00',
+        'tip': '0.00',
         'addr': req.query.addr,
         'city': req.query.city,
         'zip': req.query.zip
