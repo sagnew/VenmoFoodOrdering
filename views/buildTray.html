@@ -1,0 +1,25 @@
+<% include header.html %>
+<div class="row">
+    <div class="large-6 small-6 columns" id="restaurants">
+        <h2 align="center">Restaurants<h2>
+        <% var count = 0; %>
+        <% restaurants.forEach(function (rest) { %>
+            <div class="row panel restaurant" id="<%= count %>">
+                <h3><%= rest.na %></h3>
+                <h4><%= rest.addr %></h3>
+            </div>
+            <% count += 1; %>
+        <% }); %>
+    </div>
+
+    <div class="large-6 small-6 columns" id="menu">
+        <h2 align="center">Menu</h2>
+    </div>
+</div>
+<script>
+    var restaurants = <%- JSON.stringify(restaurants) %>;
+    var addr = "<%= addr %>";
+    var city = "<%= city %>";
+    var zip = "<%= zip %>";
+</script>
+<% include footer.html %>
