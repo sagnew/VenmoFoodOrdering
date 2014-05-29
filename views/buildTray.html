@@ -1,6 +1,6 @@
 <% include header.html %>
 <div class="row">
-    <div class="large-6 small-6 columns" id="restaurants">
+    <div class="large-5 small-5 columns" id="restaurants">
         <h2 align="center">Restaurants<h2>
         <% var count = 0; %>
         <% restaurants.forEach(function (rest) { %>
@@ -12,8 +12,11 @@
         <% }); %>
     </div>
 
-    <div class="large-6 small-6 columns" id="menu">
+    <div class="large-5 small-5 columns small-offset-1 large-offset-1" id="menuContainer">
         <h2 align="center">Menu</h2>
+        <div class="panel" id="menu">
+            <h3 align="center">Choose a restaurant to load a menu.</h3>
+        </div>
     </div>
 </div>
 <script>
