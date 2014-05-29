@@ -34,9 +34,9 @@ $(document).ready(function () {
                     // Populate the menu div with all valid menu items
                     for (var k = 0; k < displayItems.length; k += 1) {
                         var item = displayItems[k];
-                        $('#menu').append('<div class="row" id="' + k + '"><h3>' +
-                                item.name + '</h3> <br> <h4>' + item.description +
-                                '</h4> <br> <h4>' + item.price + '</h4> </div>');
+                        $('#menu').append('<div class="row panel" align="center" id="' + k + '"><h3>' +
+                                item.name + '</h3> <div class="row"> <h4>' + item.description +
+                                '</h4> </div> <div class="row"> <h4>' + item.price + '</h4> </div></div>');
                     }
                 });
             }
