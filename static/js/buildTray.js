@@ -3,20 +3,27 @@ var displayOptions = function (index) {
     $('#optionsModal').empty();
     $('#optionsModal').append('<h3 align="center">Options</h3>' +
         '<a class="close-reveal-modal">&#215;</a>');
-    console.log(index);
-    var item = currentMenu[displayItems[index].menuIndex];
+    // The index in the item group's children array.
+    var itemIndex = displayItems[index].itemIndex;
+
+    // The actual item that was clicked on.
+    var item = currentMenu[displayItems[index].menuIndex].children[itemIndex];
+
     optionsToDisplay = [];
     if (item.children.length > 0) {
         for (var i = 0; i < item.children.length; i += 1) {
-            var option = item.children[i];
-            for (var j = 0; j < option.availability.length; j += 1) {
-                if (availableMeals.indexOf(option.availability[j]) !== -1) {
-                    optionsToDisplay.push({
-                        'id': option.id,
-                        'name': option.name,
-                        'price': option.price,
-                        'description': option.descrip
-                    });
+            for (var j = 0; j < item.children[i].children.length; j += 1) {
+                var optionGroup = item.children[i];
+                var option = item.children[i].children[j];
+                for (var k = 0; k < option.availability.length; k += 1) {
+                    if (availableMeals.indexOf(option.availability[k]) !== -1) {
+                        optionsToDisplay.push({
+                            'id': option.id,
+                            'name': option.name,
+                            'price': option.price,
+                            'description': option.descrip
+                        });
+                    }
                 }
             }
         }
@@ -47,6 +54,11 @@ var displayOptions = function (index) {
 // Executes when a menu item's checkbox is checked or unchecked.
 var onMenuItemChange = function () {
     if (this.checked) {
+        // Add the item to the tray here.
+        // var item = currentMenu[displayItems[index].menuIndex];
+        // tray.addToTray({
+        //     'id': item.id
+        // });
         displayOptions($(this).attr('id'));
     }
 };
@@ -83,6 +95,7 @@ var onRestaurantClick = function () {
                                 displayItems.push({
                                     'id': item.id,
                                     'menuIndex': i,
+                                    'itemIndex': j,
                                     'name': item.name,
                                     'description': item.descrip,
                                     'price': item.price
