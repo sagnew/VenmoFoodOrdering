@@ -1,3 +1,6 @@
+// A placeholder for an item that would be added to the tray later.
+var itemToAdd = {};
+
 // Executes when an option's checkbox is checked or unchecked.
 var onOptionChange = function () {
     // Index of the option in the menu
@@ -7,8 +10,8 @@ var onOptionChange = function () {
     var option = optionsToDisplay[index];
 
     if (this.checked) {
-        // Add the option to the item in the tray.
-        tray.items[option.itemId].options.push(option);
+        // Add the option to the current item to be placed in the tray.
+        itemToAdd.options.push(option);
     }
 };
 
@@ -59,6 +62,8 @@ var displayOptions = function (item) {
     $('#optionsModal').foundation('reveal', 'open');
     $('.option').change(onOptionChange);
     $('#closeModal').click(function () {
+        // Add the item to the tray.
+        tray.addToTray(itemToAdd);
         $('#optionsModal').foundation('reveal', 'close');
     });
 };
@@ -74,17 +79,15 @@ var onMenuItemChange = function () {
     // The actual item that was clicked on.
     var item = currentMenu[displayItems[index].menuIndex].children[itemIndex];
 
-    if (this.checked) {
-        // Add the item to the tray here.
-        tray.addToTray({
-            'id': item.id,
-            'name': item.name,
-            'price': item.price,
-            'quantity': 1,
-            'options': []
-        });
-        displayOptions(item);
-    }
+    // The item to add to the tray.
+    itemToAdd = { 'id': item.id,
+        'name': item.name,
+        'price': item.price,
+        'quantity': 1,
+        'options': []
+    };
+
+    displayOptions(item);
 };
 
 // Executes when a restaurant is chosen, and displays the menu for that restaurant.
