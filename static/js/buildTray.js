@@ -1,15 +1,14 @@
 // Displays a menu for selection options for a given item.
 var displayOptions = function (index) {
+    $('#optionsModal').empty();
+    $('#optionsModal').append('<h3 align="center">Options</h3>' +
+        '<a class="close-reveal-modal">&#215;</a>');
     console.log(index);
     var item = currentMenu[displayItems[index].menuIndex];
     optionsToDisplay = [];
-    console.log(item);
-    console.log(item.children.length > 0);
     if (item.children.length > 0) {
         for (var i = 0; i < item.children.length; i += 1) {
             var option = item.children[i];
-            console.log(availableMeals);
-            console.log(option.availability);
             for (var j = 0; j < option.availability.length; j += 1) {
                 if (availableMeals.indexOf(option.availability[j]) !== -1) {
                     optionsToDisplay.push({
@@ -26,12 +25,17 @@ var displayOptions = function (index) {
         for (var h = 0; h < optionsToDisplay.length; h += 1) {
             option = optionsToDisplay[h];
             $('#optionsModal').append('<div class="row" align="center">' +
-                '<input type="checkbox" class="menu-item" id="' + h +
-                '"></input><h4>' + option.name + '</h4> <div class="row"> <h5>' +
+                option.name + '</h4> <div class="row"> <h5>' +
                 option.description + '</h5> </div> <div class="row"> <h5>' +
-                option.price + '</h5> </div></div>');
+                option.price + '</h5> </div> <input type="checkbox"' +
+                'class="menu-item" id="' + h + '"></input><h4></div>');
         }
+        $('#optionsModal').append('<div align="center">' +
+                '<button id="closeModal" class="row large-12 small-12 columns">Add to order</button></div>');
         $('#optionsModal').foundation('reveal', 'open');
+        $('#closeModal').click(function () {
+            $('#optionsModal').foundation('reveal', 'close');
+        });
     }
 };
 
