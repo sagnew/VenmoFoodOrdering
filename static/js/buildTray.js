@@ -20,23 +20,28 @@ var displayOptions = function (index) {
                 }
             }
         }
-
-        // Actually display the options.
-        for (var h = 0; h < optionsToDisplay.length; h += 1) {
-            option = optionsToDisplay[h];
-            $('#optionsModal').append('<div class="row" align="center">' +
-                option.name + '</h4> <div class="row"> <h5>' +
-                option.description + '</h5> </div> <div class="row"> <h5>' +
-                option.price + '</h5> </div> <input type="checkbox"' +
-                'class="menu-item" id="' + h + '"></input><h4></div>');
-        }
-        $('#optionsModal').append('<div align="center">' +
-                '<button id="closeModal" class="row large-12 small-12 columns">Add to order</button></div>');
-        $('#optionsModal').foundation('reveal', 'open');
-        $('#closeModal').click(function () {
-            $('#optionsModal').foundation('reveal', 'close');
-        });
     }
+
+    // Item name for reminder.
+    $('#optionsModal').append('<div class="row" align="center"><h3>' + item.name + '</h3></div>');
+
+    // Actually display the options.
+    for (var h = 0; h < optionsToDisplay.length; h += 1) {
+        option = optionsToDisplay[h];
+        $('#optionsModal').append('<div class="row" align="center">' +
+            option.name + '</h4> <div class="row"> <h5>' +
+            option.description + '</h5> </div> <div class="row"> <h5>' +
+            option.price + '</h5> </div> <input type="checkbox"' +
+            'class="menu-item" id="' + h + '"></input><h4></div>');
+    }
+
+    $('#optionsModal').append('<div align="center"><input type="text" placeholder="Quantity" id="quantity"></input>');
+    $('#optionsModal').append('<div align="center">' +
+            '<button id="closeModal" class="row large-12 small-12 columns">Add to order</button></div>');
+    $('#optionsModal').foundation('reveal', 'open');
+    $('#closeModal').click(function () {
+        $('#optionsModal').foundation('reveal', 'close');
+    });
 };
 
 // Executes when a menu item's checkbox is checked or unchecked.
