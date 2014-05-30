@@ -1,16 +1,26 @@
+// Executes when an option's checkbox is checked or unchecked.
+var onOptionChange = function () {
+    // Index of the option in the menu
+    var index = $(this).attr('id')
+
+    // The index in the item group's children array.
+    var option = optionsToDisplay[index];
+
+    if (this.checked) {
+        // Add the option to the item in the tray.
+        tray.items[option.itemId].options.push(option);
+    }
+};
+
 // Displays a menu for selection options for a given item.
-var displayOptions = function (index) {
+var displayOptions = function (item) {
     $('#optionsModal').empty();
     $('#optionsModal').append('<h3 align="center">Options</h3>' +
         '<a class="close-reveal-modal">&#215;</a>');
-    // The index in the item group's children array.
-    var itemIndex = displayItems[index].itemIndex;
 
-    // The actual item that was clicked on.
-    var item = currentMenu[displayItems[index].menuIndex].children[itemIndex];
-
+    // Intentionally global for now.
     optionsToDisplay = [];
-    if (item.children.length > 0) {
+    if (item.children) {
         for (var i = 0; i < item.children.length; i += 1) {
             for (var j = 0; j < item.children[i].children.length; j += 1) {
                 var optionGroup = item.children[i];
@@ -19,6 +29,7 @@ var displayOptions = function (index) {
                     if (availableMeals.indexOf(option.availability[k]) !== -1) {
                         optionsToDisplay.push({
                             'id': option.id,
+                            'itemId': item.id,
                             'name': option.name,
                             'price': option.price,
                             'description': option.descrip
@@ -39,13 +50,14 @@ var displayOptions = function (index) {
             option.name + '</h4> <div class="row"> <h5>' +
             option.description + '</h5> </div> <div class="row"> <h5>' +
             option.price + '</h5> </div> <input type="checkbox"' +
-            'class="menu-item" id="' + h + '"></input><h4></div>');
+            'class="option" id="' + h + '"></input><h4></div>');
     }
 
     $('#optionsModal').append('<div align="center"><input type="text" placeholder="Quantity" id="quantity"></input>');
     $('#optionsModal').append('<div align="center">' +
             '<button id="closeModal" class="row large-12 small-12 columns">Add to order</button></div>');
     $('#optionsModal').foundation('reveal', 'open');
+    $('.option').change(onOptionChange);
     $('#closeModal').click(function () {
         $('#optionsModal').foundation('reveal', 'close');
     });
@@ -53,13 +65,25 @@ var displayOptions = function (index) {
 
 // Executes when a menu item's checkbox is checked or unchecked.
 var onMenuItemChange = function () {
+    // Index of the item in the menu
+    var index = $(this).attr('id')
+
+    // The index in the item group's children array.
+    var itemIndex = displayItems[index].itemIndex;
+
+    // The actual item that was clicked on.
+    var item = currentMenu[displayItems[index].menuIndex].children[itemIndex];
+
     if (this.checked) {
         // Add the item to the tray here.
-        // var item = currentMenu[displayItems[index].menuIndex];
-        // tray.addToTray({
-        //     'id': item.id
-        // });
-        displayOptions($(this).attr('id'));
+        tray.addToTray({
+            'id': item.id,
+            'name': item.name,
+            'price': item.price,
+            'quantity': 1,
+            'options': []
+        });
+        displayOptions(item);
     }
 };
 
