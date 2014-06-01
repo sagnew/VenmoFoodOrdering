@@ -1,10 +1,15 @@
 // A placeholder for an item that would be added to the tray later.
 var itemToAdd = {};
 
+// Render the tray whenever a new item was added or removed.
+var renderTray = function () {
+    $('#tray').empty();
+};
+
 // Executes when an option's checkbox is checked or unchecked.
 var onOptionChange = function () {
     // Index of the option in the menu
-    var index = $(this).attr('id')
+    var index = $(this).attr('id');
 
     // The index in the item group's children array.
     var option = optionsToDisplay[index];
@@ -24,12 +29,10 @@ var displayOptions = function (item) {
     // Intentionally global for now.
     optionsToDisplay = [];
     if (item.children) {
-        for (var i = 0; i < item.children.length; i += 1) {
-            for (var j = 0; j < item.children[i].children.length; j += 1) {
-                var optionGroup = item.children[i];
-                var option = item.children[i].children[j];
-                for (var k = 0; k < option.availability.length; k += 1) {
-                    if (availableMeals.indexOf(option.availability[k]) !== -1) {
+        _.forEach(item.children, function (optionGroup) {
+            _.forEach(optionGroup.children, function (option) {
+                _.forEach(option.availability, function (mealTime) {
+                    if (_.contains(availableMeals, mealTime)) {
                         optionsToDisplay.push({
                             'id': option.id,
                             'itemId': item.id,
@@ -38,23 +41,22 @@ var displayOptions = function (item) {
                             'description': option.descrip
                         });
                     }
-                }
-            }
-        }
+                });
+            });
+        });
     }
 
     // Item name for reminder.
     $('#optionsModal').append('<div class="row" align="center"><h3>' + item.name + '</h3></div>');
 
     // Actually display the options.
-    for (var h = 0; h < optionsToDisplay.length; h += 1) {
-        option = optionsToDisplay[h];
+    _.forEach(optionsToDisplay, function (option) {
         $('#optionsModal').append('<div class="row" align="center">' +
             option.name + '</h4> <div class="row"> <h5>' +
             option.description + '</h5> </div> <div class="row"> <h5>' +
             option.price + '</h5> </div> <input type="checkbox"' +
             'class="option" id="' + h + '"></input><h4></div>');
-    }
+    });
 
     $('#optionsModal').append('<div align="center"><input type="text" placeholder="Quantity" id="quantity"></input>');
     $('#optionsModal').append('<div align="center">' +
@@ -112,13 +114,12 @@ var onRestaurantClick = function () {
                 currentMenu = menu;
 
                 // Iterate through the data to build an array of all valid menu items.
-                for (var i = 0; i < menu.length; i += 1) {
-                    for (var j = 0; j < menu[i].children.length; j += 1) {
-                        // i is the index in the menu, and j is the index
-                        // for the menu's children
-                        var item = menu[i].children[j];
-                        for (var h =0; h < item.availability.length; h += 1) {
-                            if (availableMeals.indexOf(item.availability[h]) !== -1) {
+                _.forEach(menu, function (menuChild) {
+                    var i = 0;
+                    _.forEach(menuChild.children, function (item) {
+                        var j = 0;
+                        _.forEach(item.availability, function (mealTime) {
+                            if (_.contains(availableMeals, mealTime)) {
                                 displayItems.push({
                                     'id': item.id,
                                     'menuIndex': i,
@@ -129,19 +130,20 @@ var onRestaurantClick = function () {
                                 });
                                 break;
                             }
-                        }
-                    };
-                };
+                        });
+                        j += 1;
+                    });
+                    i += 1;
+                });
 
                 // Populate the menu div with all valid menu items.
-                for (var k = 0; k < displayItems.length; k += 1) {
-                    var item = displayItems[k];
+                _.forEach(displatItems, function (item) {
                     $('#menu').append('<div class="row" align="center"><h4>' +
                         item.name + ' <input type="checkbox" class="menu-item" id="' + k +
                         '"></input> </h4> <div class="row"> <h5>' + item.description +
                         '</h5> </div> <div class="row"> <h5>' + item.price +
                         '</h5> </div></div>');
-                }
+                });
 
                 $('.menu-item').change(onMenuItemChange);
 
