@@ -51,5 +51,6 @@ tray = {
     'addToTray': addToTray,
     'removeFromTray': removeFromTray,
     'buildTrayString': buildTrayString,
+    'total': 0,
     'items': []
 };

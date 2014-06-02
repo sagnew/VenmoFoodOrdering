@@ -4,6 +4,28 @@ var itemToAdd = {};
 // Render the tray whenever a new item was added or removed.
 var renderTray = function () {
     $('#tray').empty();
+
+    var totalPrice = 0;
+    var i = 0;
+    _.forEach(tray.items, function (item) {
+        var optionString = "";
+        var itemTotalPrice = parseFloat(item.price);
+
+        // Calculate total price with all options included, and build string.
+        _.forEach(item.options, function (option) {
+            itemTotalPrice += parseFloat(option.price);
+            optionString += option.name + ',';
+        });
+
+        $('#tray').append('<div id="' + i + '" class="row trayItem"><h4>' +
+            item.name + ' $' + itemTotalPrice + '</h4><div class="trayOptions"><br><h5>' +
+            optionString + '</h5></div></div>');
+        totalPrice += itemTotalPrice;
+        i += 1;
+    });
+
+    $('#tray').append('<div class="row" id="totalPrice"><h4><b>Total: $' +
+            totalPrice + '</b></h4></div>');
 };
 
 // Executes when an option's checkbox is checked or unchecked.
@@ -68,6 +90,7 @@ var displayOptions = function (item) {
     $('#closeModal').click(function () {
         // Add the item to the tray.
         tray.addToTray(itemToAdd);
+        renderTray();
         $('#optionsModal').foundation('reveal', 'close');
     });
 };
@@ -75,13 +98,15 @@ var displayOptions = function (item) {
 // Executes when a menu item's checkbox is checked or unchecked.
 var onMenuItemChange = function () {
     // Index of the item in the menu
-    var index = $(this).attr('id')
+    var index = $(this).attr('id');
 
     // The index in the item group's children array.
     var itemIndex = displayItems[index].itemIndex;
 
     // The actual item that was clicked on.
     var item = currentMenu[displayItems[index].menuIndex].children[itemIndex];
+    console.log(index);
+    console.log(item);
 
     // The item to add to the tray.
     itemToAdd = { 'id': item.id,
@@ -115,11 +140,11 @@ var onRestaurantClick = function () {
                 displayItems = [];
                 currentMenu = menu;
 
+                var i = 0;
                 // Iterate through the data to build an array of all valid menu items.
                 _.forEach(menu, function (menuChild) {
-                    var i = 0;
+                    var j = 0;
                     _.forEach(menuChild.children, function (item) {
-                        var j = 0;
                         var shouldReturn = false;
                         _.forEach(item.availability, function (mealTime) {
                             if (_.contains(availableMeals, mealTime)) {
