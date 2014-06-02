@@ -162,6 +162,13 @@ var onMenuItemChange = function () {
 // Executes when a restaurant is chosen, and displays the menu for that restaurant.
 var onRestaurantClick = function () {
     $('#menu').html('<h3 align="center">Loading menu</h3>');
+
+    // Empty the tray.
+    tray.items = [];
+    var $currentTray = $('#currentTray');
+    $currentTray.empty();
+    $currentTray.append('<h3 align="center">Add items to your tray to place an order.</h3>');
+
     var index = $(this).attr('id');
     rid = restaurants[index].id;
     $.getJSON('/fee', { 'rid': rid, 'addr': addr, 'city': city, 'zip': zip }, function (feeData) {
