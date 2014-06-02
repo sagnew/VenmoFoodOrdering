@@ -135,8 +135,8 @@ var displayOptions = function (item) {
     });
 };
 
-// Executes when a menu item's checkbox is checked or unchecked.
-var onMenuItemChange = function () {
+// Executes when a menu item is selected.
+var onMenuItemClick = function () {
     // Index of the item in the menu
     var index = $(this).attr('id');
 
@@ -227,15 +227,24 @@ var onRestaurantClick = function () {
                             item.groupName + '</b></h3></div>');
                         j += 1;
                     }
-                    $menu.append('<div class="row" align="center"><h4>' +
-                        item.name + ' <input type="checkbox" class="menu-item" id="' + i +
-                        '"></input> </h4> <div class="row"> <h5>' + item.description +
-                        '</h5> </div> <div class="row"> <h5>' + item.price +
-                        '</h5> </div></div>');
+                    var itemString;
+                    if (item.description) {
+                        itemString = '<div class="row" align="center"><h4>' +
+                            item.name + ' </h4> <div class="row"> <h5>' + item.description +
+                            '</h5> </div> <div class="row"> <h5>' + item.price +
+                            '</h5> </div> <button type="checkbox" class="tiny menu-item" id="' + i +
+                            '">Add</input> </div>';
+                    } else {
+                        itemString = '<div class="row" align="center"><h4>' +
+                            item.name + '</h4><div class="row"> <h5>' + item.price +
+                            '</h5> </div> <button type="checkbox" class="tiny menu-item" id="' + i +
+                            '">Add</input> </div>';
+                    }
+                    $menu.append(itemString);
                     i += 1;
                 });
 
-                $('.menu-item').change(onMenuItemChange);
+                $('.menu-item').click(onMenuItemClick);
 
             });
         }
