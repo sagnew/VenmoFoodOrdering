@@ -50,12 +50,14 @@ var displayOptions = function (item) {
     $('#optionsModal').append('<div class="row" align="center"><h3>' + item.name + '</h3></div>');
 
     // Actually display the options.
+    var h = 0;
     _.forEach(optionsToDisplay, function (option) {
         $('#optionsModal').append('<div class="row" align="center">' +
             option.name + '</h4> <div class="row"> <h5>' +
             option.description + '</h5> </div> <div class="row"> <h5>' +
             option.price + '</h5> </div> <input type="checkbox"' +
             'class="option" id="' + h + '"></input><h4></div>');
+        h += 1;
     });
 
     $('#optionsModal').append('<div align="center"><input type="text" placeholder="Quantity" id="quantity"></input>');
@@ -118,6 +120,7 @@ var onRestaurantClick = function () {
                     var i = 0;
                     _.forEach(menuChild.children, function (item) {
                         var j = 0;
+                        var shouldReturn = false;
                         _.forEach(item.availability, function (mealTime) {
                             if (_.contains(availableMeals, mealTime)) {
                                 displayItems.push({
@@ -128,21 +131,28 @@ var onRestaurantClick = function () {
                                     'description': item.descrip,
                                     'price': item.price
                                 });
-                                break;
+                                shouldReturn = true;
+                                return;
                             }
                         });
                         j += 1;
+                        if (shouldReturn) {
+                            shouldReturn = false;
+                            return;
+                        }
                     });
                     i += 1;
                 });
 
                 // Populate the menu div with all valid menu items.
-                _.forEach(displatItems, function (item) {
+                var k = 0;
+                _.forEach(displayItems, function (item) {
                     $('#menu').append('<div class="row" align="center"><h4>' +
                         item.name + ' <input type="checkbox" class="menu-item" id="' + k +
                         '"></input> </h4> <div class="row"> <h5>' + item.description +
                         '</h5> </div> <div class="row"> <h5>' + item.price +
                         '</h5> </div></div>');
+                    k += 1;
                 });
 
                 $('.menu-item').change(onMenuItemChange);
