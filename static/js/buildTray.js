@@ -24,7 +24,7 @@ var placeOrder = function () {
             'accessToken': accessToken
         },
         success: function(response){
-            if (response._error !== '1') {
+            if (response._err !== '1') {
                 $('#orderMessage').append('<h3>Your order has been placed!</h3>');
             } else {
                 $('#orderMessage').append('<h3>There was something wrong! Please try again!</h3>');
@@ -72,6 +72,14 @@ var onOptionChange = function () {
     if (this.checked) {
         // Add the option to the current item to be placed in the tray.
         itemToAdd.options.push(option);
+    } else {
+        _.forEach(itemToAdd.options, function (optionInItem) {
+            if (optionInItem.id === option.id) {
+                var optionIndex = itemToAdd.options.indexOf(optionInItem);
+                itemToAdd.options.splice(optionIndex, 1);
+                return;
+            }
+        });
     }
 };
 
@@ -91,6 +99,7 @@ var displayOptions = function (item) {
                         optionsToDisplay.push({
                             'id': option.id,
                             'itemId': item.id,
+                            'groupId': optionGroup.id,
                             'optionGroup': optionGroup.name,
                             'groupMaxChild': parseFloat(optionGroup.max_child_select),
                             'groupMinChild': parseFloat(optionGroup.min_child_select),
@@ -142,10 +151,32 @@ var displayOptions = function (item) {
     $optionsModal.foundation('reveal', 'open');
     $('.option').change(onOptionChange);
     $('#closeModal').click(function () {
-        // Add the item to the tray.
-        tray.addToTray(itemToAdd);
-        renderTray();
-        $('#optionsModal').foundation('reveal', 'close');
+        var addItem = true;
+
+        var optionGroups = item.children;
+
+        // Go through each option group to check number of options.
+        _.forEach(optionGroups, function (optionGroup) {
+            // Find out how many options from this group are in this item.
+            var numSelected = 0, max = optionGroup.max_child_select, min = optionGroup.min_child_select;
+            _.forEach(itemToAdd.options, function (option) {
+                if (option.groupId === optionGroup.id) {
+                    numSelected += 1;
+                }
+            });
+
+            if ((numSelected > max && max !== 0) || numSelected < min) {
+                addItem = false;
+            }
+            console.log("numSelected: " + numSelected + ", max: " + max + ", min: " + min + ", addItem: " + addItem);
+        });
+
+        if (addItem) {
+            // Add the item to the tray.
+            tray.addToTray(itemToAdd);
+            renderTray();
+            $('#optionsModal').foundation('reveal', 'close');
+        }
     });
 };
 
@@ -166,6 +197,7 @@ var onMenuItemClick = function () {
     itemToAdd = { 'id': item.id,
         'name': item.name,
         'price': item.price,
+        'index': index,
         'quantity': 1,
         'options': []
     };
