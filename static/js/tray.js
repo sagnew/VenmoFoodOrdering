@@ -44,6 +44,19 @@ var removeFromTray = function (id) {
 
 // Builds the string needed to order with the Ordr.in API.
 var buildTrayString = function () {
+    var trayString = "";
+
+    _.forEach(this.items, function (item) {
+        trayString += item.id + '/' + item.quantity;
+        if (item.options) {
+            _.forEach(item.options, function (option) {
+                trayString += ',' + option.id;
+            });
+        }
+        trayString += '+';
+    });
+
+    return trayString.substring(0, trayString.length - 1);
 };
 
 // Create the tray object.

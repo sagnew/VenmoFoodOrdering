@@ -1,9 +1,35 @@
 // A placeholder for an item that would be added to the tray later.
 var itemToAdd = {};
+var rid;
+
+// Make a request to the server to place an order.
+var placeOrder = function () {
+    var trayString = tray.buildTrayString();
+    $.ajax({
+        type: "POST",
+        url: "/checkout",
+        data: {
+            'rid': rid,
+            'email': email,
+            'tray': trayString,
+            'first_name': first_name,
+            'last_name': last_name,
+            'phone': phone,
+            'zip': zip,
+            'addr': addr,
+            'city': city,
+            'state': state,
+            access_token: accessToken
+        },
+        success: function(response){
+            console.log(response);
+        }
+    });
+};
 
 // Render the tray whenever a new item was added or removed.
 var renderTray = function () {
-    $('#tray').empty();
+    $('#currentTray').empty();
 
     var totalPrice = 0;
     var i = 0;
@@ -17,14 +43,14 @@ var renderTray = function () {
             optionString += option.name + ',';
         });
 
-        $('#tray').append('<div id="' + i + '" class="row trayItem"><h4>' +
+        $('#currentTray').append('<div id="' + i + '" class="row trayItem"><h4>' +
             item.name + ' $' + itemTotalPrice + '</h4><div class="trayOptions"><br><h5>' +
             optionString + '</h5></div></div>');
         totalPrice += itemTotalPrice;
         i += 1;
     });
 
-    $('#tray').append('<div class="row" id="totalPrice"><h4><b>Total: $' +
+    $('#currentTray').append('<div class="row" id="totalPrice"><h4><b>Total: $' +
             totalPrice + '</b></h4></div>');
 };
 
@@ -123,7 +149,7 @@ var onMenuItemChange = function () {
 var onRestaurantClick = function () {
     $('#menu').html('<h3 align="center">Loading menu</h3>');
     var index = $(this).attr('id');
-    var rid = restaurants[index].id;
+    rid = restaurants[index].id;
     $.getJSON('/fee', { 'rid': rid, 'addr': addr, 'city': city, 'zip': zip }, function (feeData) {
         var minOrderAmount = parseFloat(feeData.mino);
         availableMeals = feeData.meals;
@@ -191,4 +217,5 @@ $(document).ready(function () {
     var displayItems = [];
     var currentMenu = {};
     $('.restaurant').click(onRestaurantClick);
+    $('#placeOrder').click(placeOrder);
 });
