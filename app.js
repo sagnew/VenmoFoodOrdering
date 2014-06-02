@@ -8,7 +8,6 @@ app.engine('.html', require('ejs').__express);
 app.set('views', __dirname + '/views');
 app.set('view engine', 'html');
 app.use(express.static(__dirname + '/static'));
-// app.use(express.bodyParser());
 
 // Index page
 app.get('/', function (req, res) {
@@ -72,14 +71,15 @@ app.get('/fee', function (req, res) {
     });
 });
 
-app.post('/placeorder', function (req, res) {
-    var params = req.body;
+app.get('/placeorder', function (req, res) {
+    var params = req.query;
+    console.log(params);
 
     var options = {
         'rid': params.rid,
         'em': params.email,
-        'tray': params.trayString,
-        'tip': params.tip,
+        'tray': params.tray,
+        'tip': '0.00',
         'first_name': params.first_name,
         'last_name': params.last_name,
         'phone': params.phone,
@@ -87,6 +87,7 @@ app.post('/placeorder', function (req, res) {
         'addr': params.addr,
         'city': params.city,
         'state': params.state,
+        'delivery_date': 'ASAP',
         'card_name': process.env.CARD_NAME,
         'card_number': process.env.CARD_NUMBER,
         'card_cvc': process.env.CARD_CVC,
@@ -100,7 +101,8 @@ app.post('/placeorder', function (req, res) {
 
     var accessToken = params.accessToken;
 
-    ordrin_api.order_guest(options, function (data) {
+    ordrin_api.order_guest(options, function (error, data) {
+        console.log(error);
         res.send(data);
     });
 });

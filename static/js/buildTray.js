@@ -6,8 +6,8 @@ var rid;
 var placeOrder = function () {
     var trayString = tray.buildTrayString();
     $.ajax({
-        type: "POST",
-        url: "/checkout",
+        type: "GET",
+        url: "/placeorder",
         data: {
             'rid': rid,
             'email': email,
@@ -18,8 +18,7 @@ var placeOrder = function () {
             'zip': zip,
             'addr': addr,
             'city': city,
-            'state': state,
-            access_token: accessToken
+            'state': state
         },
         success: function(response){
             console.log(response);
