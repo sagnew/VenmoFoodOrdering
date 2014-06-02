@@ -91,6 +91,7 @@ var displayOptions = function (item) {
                         optionsToDisplay.push({
                             'id': option.id,
                             'itemId': item.id,
+                            'optionGroup': optionGroup.name,
                             'name': option.name,
                             'price': option.price,
                             'description': option.descrip
@@ -102,12 +103,18 @@ var displayOptions = function (item) {
     }
 
     // Item name for reminder.
-    $('#optionsModal').append('<div class="row" align="center"><h3>' + item.name + '</h3></div>');
+    var $optionsModal = $('#optionsModal');
+    $optionsModal.append('<div class="row" align="center"><h3>' + item.name + '</h3></div>');
 
     // Actually display the options.
-    var h = 0;
+    var h = 0, currentGroup;
     _.forEach(optionsToDisplay, function (option) {
-        $('#optionsModal').append('<div class="row" align="center">' +
+        if (currentGroup !== option.optionGroup) {
+            $optionsModal.append('<div class="row" align="center"><h3><b>' +
+            option.optionGroup + '</b></h3></div>');
+            currentGroup = option.optionGroup
+        }
+        $optionsModal.append('<div class="row" align="center">' +
             option.name + '</h4> <div class="row"> <h5>' +
             option.description + '</h5> </div> <div class="row"> <h5>' +
             option.price + '</h5> </div> <input type="checkbox"' +
@@ -115,10 +122,10 @@ var displayOptions = function (item) {
         h += 1;
     });
 
-    $('#optionsModal').append('<div align="center"><input type="text" placeholder="Quantity" id="quantity"></input>');
-    $('#optionsModal').append('<div align="center">' +
+    $optionsModal.append('<div align="center"><input type="text" placeholder="Quantity" id="quantity"></input>');
+    $optionsModal.append('<div align="center">' +
             '<button id="closeModal" class="row large-12 small-12 columns">Add to order</button></div>');
-    $('#optionsModal').foundation('reveal', 'open');
+    $optionsModal.foundation('reveal', 'open');
     $('.option').change(onOptionChange);
     $('#closeModal').click(function () {
         // Add the item to the tray.
@@ -185,6 +192,7 @@ var onRestaurantClick = function () {
                                     'id': item.id,
                                     'menuIndex': i,
                                     'itemIndex': j,
+                                    'groupName': menuChild.name,
                                     'name': item.name,
                                     'description': item.descrip,
                                     'price': item.price
@@ -203,14 +211,21 @@ var onRestaurantClick = function () {
                 });
 
                 // Populate the menu div with all valid menu items.
-                var k = 0;
+                var $menu = $('#menu');
+                var i = 0, j = 0;
                 _.forEach(displayItems, function (item) {
-                    $('#menu').append('<div class="row" align="center"><h4>' +
-                        item.name + ' <input type="checkbox" class="menu-item" id="' + k +
+                    if (j === item.menuIndex){
+                        // Then this is the first item of this group.
+                        $menu.append('<div class="row" align="center"><h3><b>' +
+                            item.groupName + '</b></h3></div>');
+                        j += 1;
+                    }
+                    $menu.append('<div class="row" align="center"><h4>' +
+                        item.name + ' <input type="checkbox" class="menu-item" id="' + i +
                         '"></input> </h4> <div class="row"> <h5>' + item.description +
                         '</h5> </div> <div class="row"> <h5>' + item.price +
                         '</h5> </div></div>');
-                    k += 1;
+                    i += 1;
                 });
 
                 $('.menu-item').change(onMenuItemChange);
