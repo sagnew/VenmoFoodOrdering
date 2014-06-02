@@ -92,6 +92,8 @@ var displayOptions = function (item) {
                             'id': option.id,
                             'itemId': item.id,
                             'optionGroup': optionGroup.name,
+                            'groupMaxChild': parseFloat(optionGroup.max_child_select),
+                            'groupMinChild': parseFloat(optionGroup.min_child_select),
                             'name': option.name,
                             'price': option.price,
                             'description': option.descrip
@@ -110,10 +112,22 @@ var displayOptions = function (item) {
     var h = 0, currentGroup;
     _.forEach(optionsToDisplay, function (option) {
         if (currentGroup !== option.optionGroup) {
+            var selectString = "";
+            if (option.groupMaxChild === option.groupMinChild && option.groupMaxChild >= 0) {
+                selectString = ' (Choose ' + option.groupMaxChild + ')';
+            } else if(option.groupMaxChild > 0 && option.groupMinChild === 0) {
+                selectString = ' (Choose at most ' + option.groupMaxChild + ')';
+            } else if(option.groupMaxChild === 0 && option.groupMinChild > 0) {
+                selectString = ' (Choose at least ' + option.groupMinChild + ')';
+            } else if(option.groupMaxChild === 0 && option.groupMinChild === 0) {
+                selectString = ' (Choose any amount)';
+            }
+
             $optionsModal.append('<div class="row" align="center"><h3><b>' +
-            option.optionGroup + '</b></h3></div>');
+            option.optionGroup + selectString + '</b></h3></div>');
             currentGroup = option.optionGroup
         }
+
         $optionsModal.append('<div class="row" align="center">' +
             option.name + '</h4> <div class="row"> <h5>' +
             option.description + '</h5> </div> <div class="row"> <h5>' +
@@ -227,6 +241,7 @@ var onRestaurantClick = function () {
                             item.groupName + '</b></h3></div>');
                         j += 1;
                     }
+
                     var itemString;
                     if (item.description) {
                         itemString = '<div class="row" align="center"><h4>' +
@@ -240,6 +255,7 @@ var onRestaurantClick = function () {
                             '</h5> </div> <button type="checkbox" class="tiny menu-item" id="' + i +
                             '">Add</input> </div>';
                     }
+
                     $menu.append(itemString);
                     i += 1;
                 });
