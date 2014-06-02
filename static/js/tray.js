@@ -1,13 +1,11 @@
 // Adds an item to the tray.
 var addToTray = function (item) {
 
-    // Need to refactor this code.
-    var shouldReturn = false;
     if (this.items.length > 0) {
         // Check for duplicate items, and update quantity instead.
-        _.forEach(this.items, function (trayItem) {
-            if (trayItem.id === item.id) {
-                var oldItemOptions = trayItem.options;
+        for (var i = 0; i < this.items.length; i += 1) {
+            if (this.items[i].id === item.id) {
+                var oldItemOptions = this.items[i].options;
                 var newItemOptions = item.options;
                 if (oldItemOptions && newItemOptions) {
                     // Both items have options.
@@ -16,23 +14,17 @@ var addToTray = function (item) {
                             if (oldItemOptions[j] !== newItemOptions[k]) {
                                 // Insert the item into the tray items array.
                                 this.items.push(item);
-                                shouldReturn = true;
                                 return;
                             }
                         }
                     }
                 }
                 // These are the same items, therefore just increase quantity.
-                trayItem.quantity += item.quantity;
+                this.items[i].quantity += item.quantity;
             } else {
                 this.items.push(item);
-                shouldReturn = true;
                 return;
             }
-        });
-        if (shouldReturn) {
-            shouldReturn = false;
-            return;
         }
     } else {
         this.items.push(item);
