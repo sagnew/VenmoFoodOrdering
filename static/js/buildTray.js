@@ -1,6 +1,7 @@
 // A placeholder for an item that would be added to the tray later.
 var itemToAdd = {};
 var rid;
+var totalPrice = 0;
 
 // Make a request to the server to place an order.
 var placeOrder = function () {
@@ -18,9 +19,16 @@ var placeOrder = function () {
             'zip': zip,
             'addr': addr,
             'city': city,
-            'state': state
+            'state': state,
+            'totalPrice': totalPrice,
+            'accessToken': accessToken
         },
         success: function(response){
+            if (response._error !== '1') {
+                $('#orderMessage').append('<h3>Your order has been placed!</h3>');
+            } else {
+                $('#orderMessage').append('<h3>There was something wrong! Please try again!</h3>');
+            }
             console.log(response);
         }
     });
@@ -30,7 +38,7 @@ var placeOrder = function () {
 var renderTray = function () {
     $('#currentTray').empty();
 
-    var totalPrice = 0;
+    totalPrice = 0;
     var i = 0;
     _.forEach(tray.items, function (item) {
         var optionString = "";
